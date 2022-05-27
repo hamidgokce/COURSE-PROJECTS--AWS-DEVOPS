@@ -1,4 +1,4 @@
-from flask import Flask # 
+from flask import Flask 
 
 app = Flask(__name__)
 
@@ -19,5 +19,5 @@ def forth(id):
     return f"Id of this page is {id}" 
 
 if __name__=="__main__":
-    app.run(host='0.0.0.0', port=80) # It must be written to run on ec2.
-   # app.run(debug=True) # If debug mode is turned off, we will not receive an error warning.
+    #app.run(host='0.0.0.0', port=80) # It must be written to run on ec2.
+    app.run(debug=True) # If debug mode is turned off, we will not receive an error warning.
