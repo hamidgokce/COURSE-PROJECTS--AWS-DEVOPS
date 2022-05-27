@@ -121,7 +121,21 @@ Followings are some of features of Flask Framework;
 
 - install git and wget
 
+
+```bash
+    sudo yum update -y
+    sudo yum install python3 -y
+    python3 --version
+    sudo pip3 install flask
+    pip3 list
+    sudo yum install git wget
+```
+
 - Download the web application file from GitHub repo.
+
+wget https://raw.githubusercontent.com/hamidgokce/COURSE-PROJECTS--AWS-DEVOPS/main/AWS/Portfolio/flask-01-02-hello-world-app-Jinja-Template/flask-01-hello-world-app/hello-world-app.py
+
+wget https://raw.githubusercontent.com/hamidgokce/COURSE-PROJECTS--AWS-DEVOPS/main/AWS/Portfolio/flask-01-02-hello-world-app-Jinja-Template/flask-02-Jinja_Template/jinja.py
 
 - Run the web application
 
