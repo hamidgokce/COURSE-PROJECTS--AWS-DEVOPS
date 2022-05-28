@@ -91,3 +91,25 @@ At the end of the this hands-on training, students will be able to;
 - Run application with Python
 
 
+
+NOTE:
+
+- MySQL Workbench
+
+- Required commands for EC2.
+
+```bash
+    sudo yum update -y
+    sudo yum install python3 -y
+    python3 --version
+    sudo pip3 install flask
+    sudo pip3 install flask-mysql
+    sudo pip3 install sqlalchemy
+    sudo pip3 install Flask-SQLAlchemy
+     
+    pip3 list
+    sudo yum install git wget
+```
+
+
+
