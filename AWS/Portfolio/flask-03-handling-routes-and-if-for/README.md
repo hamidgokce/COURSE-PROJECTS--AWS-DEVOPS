@@ -155,6 +155,11 @@ The server responds to that request with an HTTP response message. Within the re
 
 - Connect the route handling and templating web application from the terminal with `curl` command.
 
+```bash
+    curl -v <ec2 public or dns address>
+```
+
+
 - Commands for EC2
 
 ```bash
