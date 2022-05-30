@@ -1,0 +1,1 @@
+aws s3 sync static-web s3://kittens.hamidgokce.com # Type this command on the CLI screen in the static-web path
