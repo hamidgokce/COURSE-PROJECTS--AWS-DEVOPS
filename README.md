@@ -50,7 +50,8 @@ List of projects as follows;
 
 List of projects as follows;
 
-- [201-Create-Apache-Servers-with-Terraform]
+- [201-Create-Apache-Servers-with-Terraform] (./DevOps/201-Create-Apache-Servers-with-Terraform/tf-draw.png)
+
 - [202-Terraform-Phonebook-Application-deployed-on-AWS]
 - [203-dockerization-bookstore-api-on-python-flask-mysql]
 - [204-docker-swarm-deployment-of-phonebook-app-on-python-flask-mysql]
