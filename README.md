@@ -50,12 +50,14 @@ List of projects as follows;
 
 List of projects as follows;
 
-- [201-Create-Apache-Servers-with-Terraform] (./DevOps/201-Create-Apache-Servers-with-Terraform/tf-draw.png)
+- [201-Create-Apache-Servers-with-Terraform](./DevOps/201-Create-Apache-Servers-with-Terraform/tf-draw.png)
 
-- [202-Terraform-Phonebook-Application-deployed-on-AWS]
-- [203-dockerization-bookstore-api-on-python-flask-mysql]
-- [204-docker-swarm-deployment-of-phonebook-app-on-python-flask-mysql]
-- [205-jenkins-pipeline-for-phonebook-app-on-docker-swarm]
-- [206-Kubernetes-Microservice-Phonebook]
-- [207-Ansible-publish-website-postgresql-nodejs-react]
-- [502-microservices-ci-cd-pipeline-with-database]
+    This project aims to create two apache servers in AWS with using Terraform to give students the understanding to building infrastructure with Terraform.
+
+- [202-Terraform-Phonebook-Application-deployed-on-AWS](./DevOps/202-Terraform-Phonebook-Application-deployed-on-AWS/)
+- [203-dockerization-bookstore-api-on-python-flask-mysql](./DevOps/203-dockerization-bookstore-api-on-python-flask-mysql/)
+- [204-docker-swarm-deployment-of-phonebook-app-on-python-flask-mysql](./DevOps/204-docker-swarm-deployment-of-phonebook-app-on-python-flask-mysql/)
+- [205-jenkins-pipeline-for-phonebook-app-on-docker-swarm](./DevOps/205-jenkins-pipeline-for-phonebook-app-on-docker-swarm/)
+- [206-Kubernetes-Microservice-Phonebook](./DevOps/206-Kubernetes-Microservice-Phonebook/)
+- [207-Ansible-publish-website-postgresql-nodejs-react](./DevOps/207-Ansible-publish-website-postgresql-nodejs-react/)
+- [502-microservices-ci-cd-pipeline-with-database](./DevOps/502-microservices-ci-cd-pipeline-with-database/)
