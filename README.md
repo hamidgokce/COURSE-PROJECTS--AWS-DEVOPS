@@ -77,24 +77,27 @@ List of projects as follows;
 
 - ### [203-dockerization-bookstore-api-on-python-flask-mysql](./DevOps/203-dockerization-bookstore-api-on-python-flask-mysql/README.md)
 
-![Flask](./AWS/Portfolio/flask-01-02-hello-world-app-Jinja-Template/flask.png)
+<!--![203-bookstore-api.png](./DevOps/203-dockerization-bookstore-api-on-python-flask-mysql/203-bookstore-api.png)-->
+<img src="./DevOps/203-dockerization-bookstore-api-on-python-flask-mysql/203-bookstore-api.png" width="65%">
+Bookstore Web API Application aims to create a bookstore web service using Docker to give students the understanding to dockerization of an application. The application code is to be deployed as a RESTful web service with Flask using Dockerfile and Docker Compose on AWS Elastic Compute Cloud (EC2) Instance using Terraform.
+
 
 - ### [204-docker-swarm-deployment-of-phonebook-app-on-python-flask-mysql](./DevOps/204-docker-swarm-deployment-of-phonebook-app-on-python-flask-mysql/README.md)
 
-![Flask](./AWS/Portfolio/flask-01-02-hello-world-app-Jinja-Template/flask.png)
+<img src="./DevOps/202-Terraform-Phonebook-Application-deployed-on-AWS/tf-phonebook.png" width="65%">
 
 - ### [205-jenkins-pipeline-for-phonebook-app-on-docker-swarm](./DevOps/205-jenkins-pipeline-for-phonebook-app-on-docker-swarm/README.md)
 
-![Flask](./AWS/Portfolio/flask-01-02-hello-world-app-Jinja-Template/flask.png)
+<img src="./DevOps/202-Terraform-Phonebook-Application-deployed-on-AWS/tf-phonebook.png" width="65%">
 
 - ### [206-Kubernetes-Microservice-Phonebook](./DevOps/206-Kubernetes-Microservice-Phonebook/README.md)
 
-![Flask](./AWS/Portfolio/flask-01-02-hello-world-app-Jinja-Template/flask.png)
+<img src="./DevOps/202-Terraform-Phonebook-Application-deployed-on-AWS/tf-phonebook.png" width="65%">
 
 - ### [207-Ansible-publish-website-postgresql-nodejs-react](./DevOps/207-Ansible-publish-website-postgresql-nodejs-react/README.md)
 
-![Flask](./AWS/Portfolio/flask-01-02-hello-world-app-Jinja-Template/flask.png)
+<img src="./DevOps/202-Terraform-Phonebook-Application-deployed-on-AWS/tf-phonebook.png" width="65%">
 
 - ### [502-microservices-ci-cd-pipeline-with-database](./DevOps/502-microservices-ci-cd-pipeline-with-database/README.md)
 
-![Flask](./AWS/Portfolio/flask-01-02-hello-world-app-Jinja-Template/flask.png)
+<img src="./DevOps/202-Terraform-Phonebook-Application-deployed-on-AWS/tf-phonebook.png" width="65%">
