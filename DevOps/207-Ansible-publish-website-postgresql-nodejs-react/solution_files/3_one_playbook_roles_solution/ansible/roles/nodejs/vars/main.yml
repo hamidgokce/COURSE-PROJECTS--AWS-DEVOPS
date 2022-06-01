@@ -1,0 +1,6 @@
+---
+# vars file for /home/ec2-user/ansible/roles/nodejs
+nodejs_home: /home/ec2-user/ansible-Project/nodejs
+container_path: /home/ec2-user/nodejs
+container_name: serdar_nodejs
+image_name: serdarcw/nodejs

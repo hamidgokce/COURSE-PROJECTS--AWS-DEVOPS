@@ -1,0 +1,28 @@
+- name: Docker install and configuration
+  gather_facts: No
+  any_errors_fatal: true
+  hosts: _development
+  become: yes
+  roles: 
+    - docker
+- name: Postgre Database configuration
+  hosts: _postgre
+  become: true
+  gather_facts: No
+  any_errors_fatal: true
+  roles:
+    - postgre
+- name: Nodejs server configuration
+  hosts: _nodejs
+  become: true
+  gather_facts: No
+  any_errors_fatal: true
+  roles:
+    - nodejs
+- name: React UI Server configuration
+  hosts: _react
+  become: true
+  gather_facts: No
+  any_errors_fatal: true
+  roles:
+    - react

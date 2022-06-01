@@ -1,0 +1,6 @@
+---
+# vars file for /home/ec2-user/ansible/roles/react
+react_home: /home/ec2-user/ansible-Project/react
+container_path: /home/ec2-user/react
+container_name: serdar_react
+image_name: serdarcw/react
