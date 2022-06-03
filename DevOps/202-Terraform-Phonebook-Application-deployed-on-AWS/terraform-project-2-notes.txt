@@ -1,8 +1,6 @@
 create a public repo in github. repo name will be phonebook. if you change the name of repo we need to make some configurations in files. then create a github token. copy and paste the token somewherelse because we will use this token. 
 launch an ec2 instance with t2.micro and open port 22.give a name terraform-server. take the public ip of your terraform-server.
 i will create a new key pair. you can use yours. 
-AKIAY3YMFVJJUDHULUFA
-kTDkCL4ZjZeuGIW+gRxa/eymNqhjVLQx0z5ftDfC
 
 connect ec2 instance with ssh-remote
 open configuration file and paste your public ip and save it. then click the connect to host button.
