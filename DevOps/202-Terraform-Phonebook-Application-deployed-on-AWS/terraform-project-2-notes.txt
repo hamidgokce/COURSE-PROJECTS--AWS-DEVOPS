@@ -1,0 +1,68 @@
+create a public repo in github. repo name will be phonebook. if you change the name of repo we need to make some configurations in files. then create a github token. copy and paste the token somewherelse because we will use this token. 
+launch an ec2 instance with t2.micro and open port 22.give a name terraform-server. take the public ip of your terraform-server.
+i will create a new key pair. you can use yours. 
+AKIAY3YMFVJJUDHULUFA
+kTDkCL4ZjZeuGIW+gRxa/eymNqhjVLQx0z5ftDfC
+
+connect ec2 instance with ssh-remote
+open configuration file and paste your public ip and save it. then click the connect to host button.
+activate your ssh-remote extension
+open the home directory of ec2 instance
+open a terminal in the home directory of ec2-user
+
+sudo yum update -y && sudo yum install -y yum-utils && sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo && sudo yum -y install terraform && sudo yum -y install git && sudo yum install tree -y && terraform --version && git --version && mkdir tf-files && cd tf-files && touch main.tf outputs.tf provider.tf sec-gr.tf user-data.sh
+open new folder and select tf-files directory.
+
+TOKEN="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"
+FOLDER="https://$TOKEN@raw.githubusercontent.com/clarusway/clarusway-devops-7-21/main/projects/202-Terraform-Phonebook-Application-deployed-on-AWS/"
+curl -s --create-dirs -o "/home/ec2-user/tf-files/templates/index.html" -L "$FOLDER"templates/index.html
+curl -s --create-dirs -o "/home/ec2-user/tf-files/templates/add-update.html" -L "$FOLDER"templates/add-update.html
+curl -s --create-dirs -o "/home/ec2-user/tf-files/templates/delete.html" -L "$FOLDER"templates/delete.html
+curl -s --create-dirs -o "/home/ec2-user/tf-files/phonebook-app.py" -L "$FOLDER"phonebook-app.py
+yaml, README, user-data.sh, fotolar.
+
+run aws configure and write your access and secret key then for region us-east-1
+check the .aws directory for your credentials
+
+# from your local, copy and paste the phonebook-app.py, phonebook-app.yaml, user-data.sh, README and templates 
+# folder to the ec2-user's home directory. copy the content of user-data.sh and paste it user-data.sh file in the directory of tf-files.
+
+lets remember the phonebook-app.py file. open it. you can change the developer name.
+by the way I would like to thank Callahan and Serdar instructore who prepared and developed this project.
+enviroment seems okay. lets scan our cloudformation file for the project because we will describe our scope.
+# yaml file github a atılmalı. 
+
+now we can start to write our tf files. we will seperate configuration into four part. main, outputs, provider and sec-gr tf files. we can write all the codes in a file but different files give us more elasticity. 
+lets open provider tf file and start.
+
+in this project we will use two provider one of them is aws and the another is github. we have provided the credentials for aws but how to connect github from terraform. we will use personnel token for authentication and authorization.
+
+open outputs tf file and we need alb dns name to open our application. so we will create a output resource.
+
+now we will create security groups for servers, alb and mysql rds. before that lets see our picture that shows the ports between sources.
+open picture (picture must be in github)
+
+
+you can use to fetch your default VpcId and SubnetId with this command.
+aws ec2 describe-subnets --no-paginate --filters "Name=default-for-az,Values=true" | egrep "(VpcId)|(SubnetId)"
+
+now we will create main resources in the main.tf file.
+lets write it. 
+
+after finished the configuration files we need to push our phonebook-app.py file and templates directory to our repo. why? lets see our user-data.sh file. because we will run this app newly created instances. so we need python codes and the templates.
+
+git clone https://timothy-clark:yourpasswordforgiyhub@github.com/timothy-clark/phonebook.git  
+(if we create a private repo this is one way of clone your private repo) sometimes it asks your username and password. you can also clone it with your token with another command. 
+
+clone your repo in the home directory of ec2-user. it will create a directory whose name will be phonebook. then 
+mv phonebook-app.py and templates folder to the phonebook directory
+mv phonebook-app.py templates/ /home/ec2-user/phonebook
+you can use ssh-remote also
+then cd phonebook
+git add .
+git commit -m "first"
+git push
+
+then cd tf-files and run terraform commands
+
+

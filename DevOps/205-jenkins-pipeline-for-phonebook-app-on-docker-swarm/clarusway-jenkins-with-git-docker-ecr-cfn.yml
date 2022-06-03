@@ -1,16 +1,8 @@
 AWSTemplateFormatVersion: 2010-09-09
 
-Description: |
-  This Cloudformation Template creates a Jenkins Server on EC2 Instance
-  using the AMI of Clarusway (ami-03f1550d415dd1663). The AMI of Clarusway 
-  Jenkins Server is published on North Virginia Region for educational purposes.
-  Jenkins Server is enabled with Git, Docker and Docker Compose 
-  and configured to work with EC2 Connect CLI, AWS ECR and Cloudformation using IAM role.
-  Docker Plugin and Docker Pipeline Plugin is also configured to run containers as agent.
-  Jenkins Server is also upgraded to AWS CLI Version 2 to enable ECR commands.
-  Jenkins Server will run on Amazon Linux 2 EC2 Instance with
-  custom security group allowing HTTP(80, 8080) and SSH (22) connections from anywhere.
-  Jenkins Server is configured with admin user `call-jenkins` and password `Call-jenkins1234`.
+Description: >
+  This Cloudformation Template deploys Phonebook Application to five Docker Machines on EC2 Instances which are ready for Docker Swarm operations. Docker Machines will run on Amazon Linux 2 with custom security group allowing SSH (22), HTTP (80) UDP (4789, 7946), and TCP(2377, 7946, 8080) connections from anywhere.
+  User needs to select appropriate key name when launching the template.
 
 Parameters:
   KeyPairName:
@@ -30,11 +22,12 @@ Resources:
               - ec2-instance-connect:SendSSHPublicKey
             Resource:
               - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
-            Condition: {"StringEquals": {"ec2:osuser": ["ec2-user", "ubuntu"]}}
+            Condition: {"StringEquals": {"aws:ResourceTag/project":"205"}}
           - Effect: Allow
             Action:
               - ec2:DescribeInstances
             Resource: "*"
+  
   EC2InstanceConnect:
     Type: "AWS::IAM::Role"
     Properties:
@@ -49,63 +42,253 @@ Resources:
       ManagedPolicyArns:
         - !Ref InstanceConnectPolicy
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
-        - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
-        - arn:aws:iam::aws:policy/AdministratorAccess
   EC2ConnectProfile:
     Type: "AWS::IAM::InstanceProfile"
     Properties:
       Roles: #required
         - !Ref EC2InstanceConnect
-  JenkinsServerSecurityGroup:
+  DockerMachinesSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable SSH and HTTP for Jenkins Server
+      GroupDescription: Enable SSH and HTTP for Docker Machines
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
-          FromPort: 8080
-          ToPort: 8080
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
-  JenkinsServer:
+        - IpProtocol: tcp
+          FromPort: 2377
+          ToPort: 2377
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 7946
+          ToPort: 7946
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: udp
+          FromPort: 7946
+          ToPort: 7946
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: udp
+          FromPort: 4789
+          ToPort: 4789
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+  ManagerLT:
+    Type: "AWS::EC2::LaunchTemplate"
+    Properties:
+      LaunchTemplateData:
+        ImageId: ami-0ab4d1e9cf9a1215a
+        InstanceType: t2.micro
+        KeyName: !Ref KeyPairName
+        IamInstanceProfile: 
+          Arn: !GetAtt EC2ConnectProfile.Arn
+        SecurityGroupIds:
+          - !GetAtt DockerMachinesSecurityGroup.GroupId
+        UserData:
+          Fn::Base64: 
+            !Sub |
+              #! /bin/bash
+              yum update -y
+              amazon-linux-extras install docker -y
+              systemctl start docker
+              systemctl enable docker
+              usermod -a -G docker ec2-user
+              curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" \
+              -o /usr/local/bin/docker-compose
+              chmod +x /usr/local/bin/docker-compose
+              yum install python3 -y
+              amazon-linux-extras install epel -y
+              yum install python-pip -y
+              pip install ec2instanceconnectcli
+              eval "$(mssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  \
+                --region ${AWS::Region} ${DockerManager1} docker swarm join-token manager | grep -i 'docker')"
+              # uninstall aws cli version 1
+              rm -rf /bin/aws
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+              ./aws/install
+              yum install amazon-ecr-credential-helper -y
+              mkdir -p /home/ec2-user/.docker
+              cd /home/ec2-user/.docker
+              echo '{"credsStore": "ecr-login"}' > config.json
+  WorkerLT:
+    Type: "AWS::EC2::LaunchTemplate"
+    Properties:
+      LaunchTemplateData:
+        ImageId: ami-0ab4d1e9cf9a1215a
+        InstanceType: t2.micro
+        KeyName: !Ref KeyPairName
+        IamInstanceProfile: 
+          Arn: !GetAtt EC2ConnectProfile.Arn
+        SecurityGroupIds:
+          - !GetAtt DockerMachinesSecurityGroup.GroupId
+        UserData:
+          Fn::Base64: 
+            !Sub |
+              #! /bin/bash
+              yum update -y
+              amazon-linux-extras install docker -y
+              systemctl start docker
+              systemctl enable docker
+              usermod -a -G docker ec2-user
+              curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" \
+              -o /usr/local/bin/docker-compose
+              chmod +x /usr/local/bin/docker-compose
+              yum install python3 -y
+              amazon-linux-extras install epel -y
+              yum install python-pip -y
+              pip install ec2instanceconnectcli
+              eval "$(mssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  \
+                --region ${AWS::Region} ${DockerManager1} docker swarm join-token worker | grep -i 'docker')"
+              # uninstall aws cli version 1
+              rm -rf /bin/aws
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+              ./aws/install
+              yum install amazon-ecr-credential-helper -y
+              mkdir -p /home/ec2-user/.docker
+              cd /home/ec2-user/.docker
+              echo '{"credsStore": "ecr-login"}' > config.json
+  DockerManager1:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-03f1550d415dd1663
-      InstanceType: t2.micro
+      ImageId: ami-0ab4d1e9cf9a1215a
+      InstanceType: t3a.medium
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref EC2ConnectProfile
       SecurityGroupIds:
-        - !GetAtt JenkinsServerSecurityGroup.GroupId
+        - !GetAtt DockerMachinesSecurityGroup.GroupId
       Tags:                
         - Key: Name
-          Value: !Sub Jenkins Server of ${AWS::StackName}
+          Value: !Sub Docker Manager 1st of ${AWS::StackName}                      
         - Key: server
-          Value: jenkins
-      UserData:
+          Value: docker-grand-master
+        - Key: project
+          Value: "205"
+      UserData: 
         Fn::Base64: |
           #! /bin/bash
           yum update -y
-          hostnamectl set-hostname jenkins-server
-          yum install python3 -y
-          pip3 install ec2instanceconnectcli
+          hostnamectl set-hostname Grand-Master
+          amazon-linux-extras install docker -y
+          systemctl start docker
+          systemctl enable docker
+          usermod -a -G docker ec2-user
+          curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" \
+          -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+          docker swarm init
+          yum install git -y
+          docker service create \
+            --name=viz \
+            --publish=8080:8080/tcp \
+            --constraint=node.role==manager \
+            --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
+            dockersamples/visualizer
+          # uninstall aws cli version 1
+          rm -rf /bin/aws
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          ./aws/install
           yum install amazon-ecr-credential-helper -y
-          mkdir -p /home/jenkins/.docker
-          cd /home/jenkins/.docker
+          mkdir -p /home/ec2-user/.docker
+          cd /home/ec2-user/.docker
           echo '{"credsStore": "ecr-login"}' > config.json
+  DockerManager2:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - DockerManager1
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref ManagerLT
+        Version: !GetAtt ManagerLT.LatestVersionNumber 
+      Tags:                
+        - Key: server
+          Value: docker-manager-2                       
+        - Key: Name
+          Value: !Sub Docker Manager 2nd of ${AWS::StackName}
+        - Key: project
+          Value: "205"
+  DockerManager3:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - DockerManager2
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref ManagerLT
+        Version: !GetAtt ManagerLT.LatestVersionNumber
+      Tags:                
+        - Key: server
+          Value: docker-manager-3                        
+        - Key: Name
+          Value: !Sub Docker Manager 3rd of ${AWS::StackName}
+        - Key: project
+          Value: "205"
+  DockerWorker1:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - DockerManager2
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref WorkerLT
+        Version: !GetAtt WorkerLT.LatestVersionNumber
+      Tags:                
+        - Key: server
+          Value: docker-worker-1                       
+        - Key: Name
+          Value: !Sub Docker Worker 1st of ${AWS::StackName}
+        - Key: project
+          Value: "205"
+  DockerWorker2:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - DockerWorker1
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref WorkerLT
+        Version: !GetAtt WorkerLT.LatestVersionNumber 
+      Tags:                
+        - Key: server
+          Value: docker-worker-2                       
+        - Key: Name
+          Value: !Sub Docker Worker 2nd of ${AWS::StackName}
+        - Key: project
+          Value: "205" 
 Outputs:
-  JenkinsDNS:
-    Description: Jenkins Server DNS Name
-    Value: !Sub 
-      - ${PublicAddress}
-      - PublicAddress: !GetAtt JenkinsServer.PublicDnsName
-  JenkinsURL:
-    Description: Jenkins Application URL
+  1stDockerManagerDashboard:
+    Description: Dashboard for Docker Swarm
     Value: !Sub 
       - http://${PublicAddress}:8080
-      - PublicAddress: !GetAtt JenkinsServer.PublicDnsName
+      - PublicAddress: !GetAtt DockerManager1.PublicDnsName
+  1stDockerManagerDNSName:
+    Description: Docker Manager 1st DNS Name
+    Value: !Sub 
+      - ${PublicAddress}
+      - PublicAddress: !GetAtt DockerManager1.PublicDnsName
+  2ndDockerManagerDNSName:
+    Description: Docker Manager 2nd DNS Name
+    Value: !Sub 
+      - ${PublicAddress}
+      - PublicAddress: !GetAtt DockerManager2.PublicDnsName
+  3rdDockerManagerDNSName:
+    Description: Docker Manager 3rd DNS Name
+    Value: !Sub 
+      - ${PublicAddress}
+      - PublicAddress: !GetAtt DockerManager3.PublicDnsName
+  1stDockerWorkerDNSName:
+    Description: Docker Worker 1st DNS Name
+    Value: !Sub 
+      - ${PublicAddress}
+      - PublicAddress: !GetAtt DockerWorker1.PublicDnsName
+  2ndDockerWorkerDNSName:
+    Description: Docker Worker 2nd DNS Name
+    Value: !Sub 
+      - ${PublicAddress}
+      - PublicAddress: !GetAtt DockerWorker2.PublicDnsName
