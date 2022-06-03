@@ -30,7 +30,6 @@ services:
             - clarusnet
 networks:
     clarusnet:
-        driver: overlay
 
 volumes:
     db-data:
@@ -38,4 +37,3 @@ volumes:
 configs:
     table:
         file: ./init.sql
-

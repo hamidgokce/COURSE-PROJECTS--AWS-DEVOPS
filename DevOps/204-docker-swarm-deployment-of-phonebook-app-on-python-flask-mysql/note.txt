@@ -1,0 +1,33 @@
+* INFRASTRUCTURE
+
+    - Public github repo
+    - docker swarm / # docker-compose config 
+        - 3 manager  (lidere ozel komutlar)
+        - 2 worker (worker a ait komutlar) 3 ayri resource olusturmaliyiz. (master/worker/irtibat)
+                    pemfile olmadan makinalara baglanmak gerekiyor. pem file nin ortalikta olmasi secure degil. (setup EC2 instance connect) pem file olmadan makinalarin birbirine 
+                    baglanmasi  (pip install ec2instanceconnectcli)
+            - her biri birbirleri ile gorusebilmeli
+            - ec2 instance connect cli
+            - IAM policy
+
+            tf file 
+                --force-rm ==> docker da intermediate layerlari sil
+                .env ==> dockercompose file da belirtmistik
+        - leader manager ECR dan imaj cekmeli ve gondermeli
+        - ECR full access icin policy
+        - Diger manager ve worker'larda ECR'dan imaj cekebilmeli
+    - image repo olarak AWS ECR olusturulacak
+    - main.tf
+
+* APPLICATION
+
+    - Dockerfile
+        - app-server icin kullanicak imaji bu Dockerfile ile olusturuyoruz
+        - gereken dosyalar;
+            - phonebook-app.py 
+            - requirements.txt
+            - templates
+
+    - docker-compose.yml
+        - services: app-server and mysql
+        - app-server imaji ECR'dan cekecek

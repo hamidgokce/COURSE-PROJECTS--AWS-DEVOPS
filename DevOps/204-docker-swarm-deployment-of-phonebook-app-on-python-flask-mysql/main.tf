@@ -1,6 +1,6 @@
 //This terraform file deploys Phonebook Application to five Docker Machines on EC2 Instances  which are ready for Docker Swarm operations. Docker Machines will run on Amazon Linux 2  with custom security group allowing SSH (22), HTTP (80) UDP (4789, 7946),  and TCP(2377, 7946, 8080) connections from anywhere.
 //User needs to select appropriate key name when launching the template.
-/*
+
 terraform {
   required_providers {
     aws = {
@@ -9,7 +9,7 @@ terraform {
     }
   }
 }
-*/
+
 
 
 provider "aws" {
@@ -20,21 +20,18 @@ provider "aws" {
 }
 
 
-locals { # repoda user datada belirttigimiz yer. Bir turlu variable diyebiliriz
+locals {
   github-repo = "https://github.com/hamidgokce/phonebookswarm.git"
-  github-file-url = "https://raw.githubusercontent.com/hamidgokce/phonebookswarm/main/"
+  github-file-url = "https://raw.githubusercontent.com/hamidgokce/phonebookswarm/master/"
 }
 
+data "aws_caller_identity" "current" {}
 
-data "aws_caller_identity" "current" {} #  account id veya user id cekebiliriz
-
-data "aws_region" "current" { # aws regionlari alabilmekteyiz / region kullanacagimiz yerlerde bu bilgiyi cekecegiz
+data "aws_region" "current" {
   name = "us-east-1"
 }
 
-
-# user data template yazip resource ye baglayabilmekteyiz
-data "template_file" "leader-master" { # leader manager user datasi
+data "template_file" "leader-master" {
   template = <<EOF
     #! /bin/bash
     yum update -y
@@ -121,8 +118,8 @@ data "template_file" "worker" {
 }
 
 
-resource "aws_ecr_repository" "ecr-repo" { # ecr reponun olusturulmasi
-  name                 = "hamid-clarusway-repo/phonebook-app"
+resource "aws_ecr_repository" "ecr-repo" {
+  name                 = "clarusway-repo/phonebook-app"
   image_tag_mutability = "MUTABLE"
   image_scanning_configuration {
     scan_on_push = false
@@ -130,13 +127,13 @@ resource "aws_ecr_repository" "ecr-repo" { # ecr reponun olusturulmasi
 
 }
 
-resource "aws_iam_instance_profile" "ec2ecr-profile" { # pull push icin full access
-  name = "hamidswarmprofile"
+resource "aws_iam_instance_profile" "ec2ecr-profile" {
+  name = "swarmprofile"
   role = aws_iam_role.ec2fulltoecr.name
 }
 
 resource "aws_iam_role" "ec2fulltoecr" {
-  name = "hamidec2roletoecr"
+  name = "ec2roletoecr"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -179,18 +176,18 @@ resource "aws_iam_role" "ec2fulltoecr" {
 }
 
 resource "aws_instance" "docker-machine-leader-manager" {
-  ami             = "ami-0022f774911c1d690"
+  ami             = "ami-087c17d1fe0178315"
   instance_type   = "t2.micro"
   key_name        = "EC2_key"
   root_block_device {
       volume_size = 16
-  }  
+  }
   //  Write your pem file name
-  security_groups = ["hamid-docker-swarm-sec-gr"]
+  security_groups = ["docker-swarm-sec-gr"]
   iam_instance_profile = aws_iam_instance_profile.ec2ecr-profile.name
   user_data = data.template_file.leader-master.rendered
   tags = {
-    Name = "hamid-Docker-Swarm-Leader-Manager"
+    Name = "Docker-Swarm-Leader-Manager"
   }
 }
 
@@ -199,12 +196,12 @@ resource "aws_instance" "docker-machine-managers" {
   instance_type   = "t2.micro"
   key_name        = "EC2_key"
   //  Write your pem file name
-  security_groups = ["hamid-docker-swarm-sec-gr"]
+  security_groups = ["docker-swarm-sec-gr"]
   iam_instance_profile = aws_iam_instance_profile.ec2ecr-profile.name
   count = 2
   user_data = data.template_file.manager.rendered
   tags = {
-    Name = "hamid-Docker-Swarm-Manager-${count.index + 1}"
+    Name = "Docker-Swarm-Manager-${count.index + 1}"
   }
   depends_on = [aws_instance.docker-machine-leader-manager]
 }
@@ -214,12 +211,12 @@ resource "aws_instance" "docker-machine-workers" {
   instance_type   = "t2.micro"
   key_name        = "EC2_key"
   //  Write your pem file name
-  security_groups = ["hamid-docker-swarm-sec-gr"]
+  security_groups = ["docker-swarm-sec-gr"]
   iam_instance_profile = aws_iam_instance_profile.ec2ecr-profile.name
   count = 2
   user_data = data.template_file.worker.rendered
   tags = {
-    Name = "hamid-Docker-Swarm-Worker-${count.index + 1}"
+    Name = "Docker-Swarm-Worker-${count.index + 1}"
   }
   depends_on = [aws_instance.docker-machine-leader-manager]
 }
@@ -229,7 +226,7 @@ variable "sg-ports" {
   default = [80, 22, 2377, 7946, 8080]
 }
 resource "aws_security_group" "tf-docker-sec-gr" {
-  name = "hamid-docker-swarm-sec-gr"
+  name = "docker-swarm-sec-gr"
   tags = {
     Name = "swarm-sec-gr"
   }
@@ -264,7 +261,7 @@ resource "aws_security_group" "tf-docker-sec-gr" {
 
 
 output "leader-manager-public-ip" {
-  value = aws_instance.docker-machine-leader-manager.public_ip 
+  value = aws_instance.docker-machine-leader-manager.public_ip
 }
 
 output "website-url" {
@@ -276,11 +273,11 @@ output "viz-url" {
 }
 
 output "manager-public-ip" {
-  value = aws_instance.docker-machine-managers.*.public_ip 
+  value = aws_instance.docker-machine-managers.*.public_ip
 }
 
 output "worker-public-ip" {
-  value = aws_instance.docker-machine-workers.*.public_ip 
+  value = aws_instance.docker-machine-workers.*.public_ip
 }
 
 output "ecr-repo-url" {
