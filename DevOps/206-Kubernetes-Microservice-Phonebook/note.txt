@@ -1,0 +1,41 @@
+aws cloudformation create-stack help
+
+- cloud formation ile k8s master/worker kur
+- docker file olustur / image_for_result_server
+- build et
+    - docker build -t hamidgokce/python_result_server .
+- docker file olustur / image_for_web_server
+- build et
+    - docker build -t hamidgokce/python_web_server .
+- docker hub a push et
+- k8s klasoru ve ilgili klasorleri olustur(github reposundan gorulebilir ilgili klasorler)
+- butun servislerin ihtiyac duyacagini kaynaklari insa edelim (configmap)
+- klasor hiyerarsisindeki gibi klasorleri ile yml dosyalarini olusturalim
+- localdeki k8s klasorunu remote ye kopyalayalim
+- secret-configmap klasorunde
+    - kubectl apply -f .
+    - kubectl get cm
+    - kubectl get secret
+- mysql klasorunde
+    - kubectl apply -f .
+    - kubectl get pv (retain: herseyi tut) 
+    - kubectl get pvc
+    - kubectl get svc
+    - kubectl get ep mysql-service
+    - kubectl get pod -o wide
+    - kubectl get ep mysql-service
+- result server daha sonra web_server klasorunde
+    - kubectl apply -f .
+    - kubectl get svc
+    - kubectl get ep
+    - kubectl apply -f .
+    - kubectl get svc
+    - kubectl get ep
+    - kubectl get ep result-service
+    - kubectl get po -o wide
+    - kubectl apply -f .
+    - kubectl get svc
+    - kubectl get ep phonebook-service
+    - kubectl get po -o wide
+    - kubectl get deploy
+- node portlari 30001 ve 30002 idi. master sg sini degistirelim
