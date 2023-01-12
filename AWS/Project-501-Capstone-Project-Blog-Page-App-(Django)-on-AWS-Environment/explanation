@@ -1,0 +1,29 @@
+Explanation
+
+"The Clarusway Blog Page Application" aims to deploy blog application as a web application written in Django Framework on AWS Cloud Infrastructure. 
+
+Basically application keeps user’s blogs which has media files and their comments. 
+
+I defined custom VPC to create the infrastructure and its subnets.
+
+It had 2 AZ’s and each AZ has 2 subnets which includes private and public subnets. 
+
+NAT instance has initialized to be able to connect to resources which is located in private subnet. 
+
+CloudFront has set as a cache server which points to Application Load Balancer. Also it speeded up distribution of static & dynamic web application. 
+
+User registration data is kept in separate MySQL database in AWS RDS service while pictures and videos are kept in S3 bucket. 
+
+The object list of S3 Bucket contains movies and videos are recorded on DynamoDB table. 
+
+I created content of a list in Lambda function and event in S3 bucket. Whenever any user uploads or deletes files in S3 bucket, process will be followed in DynamoDB.
+
+Route tables and internet gateway are created in order to be able to connect the application from outside of the world.
+
+Route 53 service is used to publish the website with specified domain name.
+
+Plus; failover scenario included incase if application is not reachable, traffic can be redirected to static website. After, the issue is fixed, Route 53 will be able redirect the traffic to previous website endpoint which is CloudFront.
+
+At the end of the project; I constructed VPC environment with whole components like public and private subnets, route tables and managing their routes, internet Gateway, NAT Instance.
+
+I believe I demonstrated my configuration skills of AWS VPC, EC2 Launch Templates, Application Load Balancer, ALB Target Group, ALB Listener, Auto Scaling Group, S3, RDS, CloudFront, Route 53.
