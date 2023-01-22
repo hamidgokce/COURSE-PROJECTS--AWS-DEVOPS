@@ -108,5 +108,5 @@ The Clarusway Web-Page Application aims to deploy web-page written Nodejs and Re
 
 - ### [502-microservices-ci-cd-pipeline-with-database](./DevOps/502-microservices-ci-cd-pipeline-with-database/README.md)
 
-<img src="./DevOps/202-Terraform-Phonebook-Application-deployed-on-AWS/tf-phonebook.png" width="65%">
+<img src="./DevOps/502-microservices-ci-cd-pipeline-with-database/clinic-png" width="65%">
 This project aims to create full CI/CD Pipeline for microservice based applications using [Spring Petclinic Microservices Application](https://github.com/spring-petclinic/spring-petclinic-microservices). Jenkins Server deployed on Elastic Compute Cloud (EC2) Instance is used as CI/CD Server to build pipelines.
