@@ -2,7 +2,24 @@
 
 [*Project Source*](https://www.udemy.com/course/devopsprojects/?src=sac&kw=devops+projects)
 
-![Project-Architecture](images/Project-1-Architecture.png)
+![Project-Architecture](images/Multi_Tier_Web_Application_Stack_Setup_Locally.png)
+
+- We need to set up all these services in our virtual machines.
+- Web app is social networking site written by developers in Java language.
+- Users get experience of a web application.
+- In this project we don't have URL, we have an IP address. 
+- Nginx service help us to create the load balancing experience.
+- Nginx server will forward the incoming request to Apache Tomcat server/service.
+- Apache Tomcat is a Java web application service. If we have a web application written in Java, Tomcat is a very famous service to host it.
+- If the application needs an external storage, we can use NFS servers.
+- If we have cluster of servers and if we need a centralized storage, we can store it in NFS. (NFS is an easy way to connect to remote machines over the network. distributed file system protocol. With NFS, we can manage storage areas in different locations and allow different clients to write data to these areas.)
+- The user will get a webpage and log in. The login details will be stored in MySQL database.
+- Rabbit MQ is a message broker, also called a Queuing agent to connect to applications. We can stream the data from this. (message broker/queue or Queuing agent)
+- Our application which is running in tomcat, accessed by the users and the user will log in with username and password. When that happens, our application will run an SQL query to access the user information stored in MySQL database.
+- The request will go to Memcached service before MySQL database. (Database caching service) It will be connected with the MySQL server.
+- We will be using a vagrant to automate automatically set up our virtual machine.
+- Vagrant is going to communicate with Oracle VM Virtual Box.
+- We will be using some batch scripts commands to set up our services.
 
 ## PreRequisites Installed:
   * Oracle VM VirtualBox Manager
@@ -15,7 +32,7 @@
 
 - First clone the repository
 ```sh
-git clone https://github.com/rumeysakdogan/vprofile-project.git
+git clone https://github.com/hamidgokce/COURSE-PROJECTS--AWS-DEVOPS.git
 ```
 
 - We need to go to directory that our Vagrantfile exists. Before we run our VBoxes using `vagrant`, we need to install below plugin.
@@ -61,6 +78,8 @@ ping db01
 ping mc01
 logout
 ```
+
+- Ngnix server (web01) is going to connect our applications server (app01), app01 is going to connect mc01, rmq01, db01. 
 
 ## Step2: Provisioning
 
@@ -177,13 +196,14 @@ exit
 ![](images/connected-to-mariadb.png)
 - Next we will clone source code to database vm. And change directory to `src/main/resources/` to get the `sql queries.
 ```
-git clone https://github.com/rumeysakdogan/vprofile-project.git
-cd vprofile-project/src/main/resources/
+git clone https://github.com/hamidgokce/COURSE-PROJECTS--AWS-DEVOPS.git
+cd COURSE-PROJECTS--AWS-DEVOPS/Real_Time_DevOps_Project/Project-1_Multi\ Tier\ Web\ Application\ Stack\ Setup\ Locally/src/main/resources/
+
 ```
 - First we will run below queries before initializing our database.
 ```sh
 mysql -u root -p"$DATABASE_PASS" -e "create database accounts"
-mysql -u root -p"$DATABASE_PASS" -e "grant all privileges on accounts.* TO 'admin'@'app01' identified by 'admin123' "
+mysql -u root -p"$DATABASE_PASS" -e "grant all privileges on accounts.* TO 'admin'@'app01' identified by 'admin123' " # admin server in the database  can be access app01 full privilages on accounts database 
 cd ../../..
 mysql -u root -p"$DATABASE_PASS" accounts < src/main/resources/db_backup.sql
 mysql -u root -p"$DATABASE_PASS" -e "FLUSH PRIVILEGES"
@@ -228,7 +248,7 @@ yum install memcached -y
 ```sh
 systemctl start memcached
 systemctl enable memcached
-systemctl status memcache
+systemctl status memcached
 ```
 
 - We will run one more command to that `memcached` can listen on TCP port `11211` and UDP port `11111`.
@@ -263,6 +283,7 @@ yum install wget -y
 cd /tmp/
 wget http://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
 sudo rpm -Uvh erlang-solutions-2.0-1.noarch.rpm
+sudo yum -y install erlang socat
 ``` 
 
 - Now we can install RabbitMQ server. With below command, we will install the script and pipe with shell to execute the script.
@@ -282,7 +303,7 @@ systemctl status rabbitmq-server
 ```sh
 cd ~
 echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config
-rabbitmqctl add_user test test
+rabbitmqctl add_user test test # add user named test and password named test
 rabbitmqctl set_user_tags test administrator
 systemctl restart rabbitmq-server
 ```
@@ -316,7 +337,7 @@ yum install git maven wget -y
 - Now we can download Tomcat. First switch to `/tmp/` directory.
 ```sh
 cd /tmp
-wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.37/bin/apache-tomcat-8.5.37.tar.
+wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.37/bin/apache-tomcat-8.5.37.tar.gz
 tar xzvf apache-tomcat-8.5.37.tar.gz
 ```
 
@@ -380,14 +401,14 @@ systemctl status tomcat
 
 - We are still in `/tmp` directory, we will clone our source code here.
 ```sh
-git clone https://github.com/rumeysakdogan/vprofile-project.git
+git clone https://github.com/hamidgokce/COURSE-PROJECTS--AWS-DEVOPS.git
 ls
-cd vprofile-project/
+cd COURSE-PROJECTS--AWS-DEVOPS/
 ```
 
 - Before we build our artifact, we need to update our configuration file that will be connect to our backend services db, memcached and rabbitmq service.
 ```sh
-vi src/main/resources/application.properties
+vi Real_Time_DevOps_Project/Project-1_Multi\ Tier\ Web\ Application\ Stack\ Setup\ Locally/src/main/resources/application.properties
 ```
 
 - application.properties file: Here we need to make sure the settings are correct. First check DB configuration. Our db server is `db01` , and we have `admin` user with password `admin123` as we setup. For memcached service, hostname is `mc01` and we validated it is listening on tcp port 11211. Fort rabbitMQ, hostname is `rmq01` and we have created user `test` with pwd `test`.
@@ -414,7 +435,9 @@ rabbitmq.username=test
 rabbitmq.password=test
 ```
 
-- Run `mvn install` command which will create our artifact. Our artifact will be created `/tmp/vprofile-project/target/vprofile-v2.war`
+- Run `mvn install` command which will create our artifact. Our artifact will be created `/tmp/COURSE-PROJECTS--AWS-DEVOPS/Real_Time_DevOps_Project/Project-1_Multi Tier Web Application Stack Setup Locally/target/vprofile-v2.war`
+![](images/vprofile-v2.png)
+
 ```sh
 cd target/
 ls
@@ -433,6 +456,7 @@ cd ..
 cp target/vprofile-v2.war /usr/local/tomcat8/webapps/ROOT.war
 systemctl start tomcat
 ls /usr/local/tomcat8/webapps/
+systemctl status tomcat
 ```
 
 - By the time, our application is coming up we can provision our Nginx server.
@@ -450,7 +474,8 @@ sudo su -
 apt install nginx -y
 ```
 
-- We will create a Nginx configuration file under directory `/etc/nginx/sites-available/` with below content:
+- We will create a Nginx configuration file under directory `/etc/nginx/sites-available/` with below content: 
+Frontend is going to listen on port 80, if you access nginx service on port 80, it is going to route the request to the vproapp server(app01:8080)
 ```sh
 vi /etc/nginx/sites-available/vproapp
 Content to add:
@@ -474,6 +499,7 @@ rm -rf /etc/nginx/sites-enabled/default
 ```sh
 ln -s /etc/nginx/sites-available/vproapp /etc/nginx/sites-enabled/vproapp
 systemctl restart nginx
+systemctl status nginx
 ```
 
 ### Validate Application from Browser
@@ -490,6 +516,7 @@ enp0s8: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 ![](images/login-successful.png)
 
+- If the logging is successfull, that means database db01 MySQL server is connected.
 - Validate app is running from Tomcat server
 
 ![](images/db-connection-successful.png)

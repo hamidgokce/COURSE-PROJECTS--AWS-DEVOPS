@@ -200,8 +200,10 @@ systemctl restart nginx
 
 - First clone the repository
 ```sh
-git clone https://github.com/rumeysakdogan/vprofile-project.git
+git clone https://github.com/hamidgokce/COURSE-PROJECTS--AWS-DEVOPS.git
+
 ```
+- Find "Project-2_Automated Setup of Multi Tier App" named folder.
 
 - We need to go to directory that our Vagrantfile exists. Before we run our VBoxes using `vagrant`, we need to install below plugin.
 ```sh
