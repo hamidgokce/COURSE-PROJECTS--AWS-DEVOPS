@@ -110,3 +110,10 @@ The Clarusway Web-Page Application aims to deploy web-page written Nodejs and Re
 
 <img src="./DevOps/502-microservices-ci-cd-pipeline-with-database/clinic.png" width="65%">
 This project aims to create full CI/CD Pipeline for microservice based applications using [Spring Petclinic Microservices Application](https://github.com/spring-petclinic/spring-petclinic-microservices). Jenkins Server deployed on Elastic Compute Cloud (EC2) Instance is used as CI/CD Server to build pipelines.
+
+
+## [Real Time DevOps Project](https://www.udemy.com/share/103WWq3@oAs_BS8MNYbf61ju23CbKyzUoyY4hxpgxwNd8sLo3a-1pt2vfrteCOB-DbO707vwXg==/)
+
+- ### [Project-1_Multi Tier Web Application Stack Setup Locally](./Real_Time_DevOps_Project/Project-1_Multi%20Tier%20Web%20Application%20Stack%20Setup%20Locally/README.md)
+- ### [Project-2_Automated Setup of Multi Tier App](./Real_Time_DevOps_Project/Project-2_Automated%20Setup%20of%20Multi%20Tier%20App/README.md)
+
