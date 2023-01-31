@@ -23,13 +23,13 @@
 
 ### Step-1: Create Security Groups for Services
 
-- We will create `vprofile-ELB-SG` first. We will configure `Inbound` rules to Allow both `HTTP` and `HTTPS` on port `80` and `443` respectively  from Anywhere `IPv4` and `IPv6`.
+- We will create `proje3-ELB-SG` first. We will configure `Inbound` rules to Allow both `HTTP` and `HTTPS` on port `80` and `443` respectively  from Anywhere `IPv4` and `IPv6`.
 ![](images/ELB-SecGrp.png)
 
-- Next we will create `vprofile-app-SG`. We will open port `8080` to accept connections from `vprofile-ELb-SG`.
+- Next we will create `proje3-app-SG`. We will open port `8080` to accept connections from `vprofile-ELb-SG`.
 ![](images/App-SecGrp.png)
 
-- Finally, we will create `vprofile-backend-SG`. WE need to open port `3306` for `MySQL`, `11211` for `Memcached` and `5672` for `RabbitMQ` server. We can check whcih ports needed fro aplication services to communicate each other from `application.properties` file under `src/main/resources` directory.We also need to open commucation `AllTraffic` from own SecGrp for backend services to communicate with each other.
+- Finally, we will create `proje3-backend-SG`. WE need to open port `3306` for `MySQL`, `11211` for `Memcached` and `5672` for `RabbitMQ` server. We can check whcih ports needed fro aplication services to communicate each other from `application.properties` file under `src/main/resources` directory.We also need to open commucation `AllTraffic` from own SecGrp for backend services to communicate with each other.
 ![](images/Backend-SecGrp.png)
 
 ### Step-2: Create KeyPair to Connect EC2 instances
@@ -42,7 +42,7 @@
 
 ##### DB Instance:
 
-- Create DB instance with below details.We will also add Inbound rule to `vprofile-backend-SG` for `SSH` on port `22`  from `MyIP` to be able to connect our db instance via SSH.
+- Create DB instance with below details.We will also add Inbound rule to `proje3-backend-SG` for `SSH` on port `22`  from `MyIP` to be able to connect our db instance via SSH.
 ```sh
 Name: proje3-db01
 Project: vprofile
@@ -128,7 +128,7 @@ Value/Route traffic to: IP address or another value
 
 ### Step-4: Provision Application EC2 instances with UserData script
 
-- Create Tomcat instance with below details.We will also add Inbound rule to `vprofile-app-SG` for `SSH` on port `22`  from `MyIP` to be able to connect our db instance via SSH.
+- Create Tomcat instance with below details.We will also add Inbound rule to `proje3-app-SG` for `SSH` on port `22`  from `MyIP` to be able to connect our db instance via SSH.
 ```sh
 Name: proje3-app01
 Project: vprofile
