@@ -114,12 +114,10 @@ This project aims to create full CI/CD Pipeline for microservice based applicati
 
 ## [Real Time DevOps Project](https://www.udemy.com/course/devopsprojects/?src=sac&kw=devops+projects)
 
-- ### [Project-1_Multi Tier Web Application Stack Setup Locally][def]
+- ### [Project-1_Multi Tier Web Application Stack Setup Locally](./Real_Time_DevOps_Project/Project-1_Multi%20Tier%20Web%20Application%20Stack%20Setup%20Locally/README.md)
 
 - ### [Project-2_Automated Setup of Multi Tier App](./Real_Time_DevOps_Project/Project-2_Automated%20Setup%20of%20Multi%20Tier%20App/README.md)
 
 <img src=".\Real_Time_DevOps_Project\Project-1_Multi Tier Web Application Stack Setup Locally\images\Multi_Tier_Web_Application_Stack_Setup_Locally.png" width="65%">
 
-- ### [Project-3_Lift&Shift Application Workflow to AWS](./Real_Time_DevOps_Project/Project-3_Lift and Shift Application Workload to AWS/README.md)
-
-<img src=".\Real_Time_DevOps_Project\Project-3_Lift and Shift Application Workload to AWS\images\Project-3.png" width="65%">
+- ### [Project-3_Lift and Shift Application Workload to AWS](./Real_Time_DevOps_Project/Project-3_Lift%20and%20Shift%20Application%20Workload%20to%20AWS/README.md)
