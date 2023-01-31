@@ -130,22 +130,25 @@ Value/Route traffic to: IP address or another value
 
 - Create Tomcat instance with below details.We will also add Inbound rule to `vprofile-app-SG` for `SSH` on port `22`  from `MyIP` to be able to connect our db instance via SSH.
 ```sh
-Name: vprofile-app01
+Name: proje3-app01
 Project: vprofile
 AMI: Ubuntu 18.04
 InstanceType: t2.micro
-SecGrp: vprofile-app-SG
+SecGrp: proje3_app_sg
 UserData: tomcat_ubuntu.sh
 ```
 
+
 ### Step-5: Create Artifact Locally with MAVEN
 
+![](images/powershell.png)
 - Clone the repository.
 ```sh
-git clone https://github.com/rumeysakdogan/vprofile-project.git
+git clone https://github.com/hamidgokce/COURSE-PROJECTS--AWS-DEVOPS.git
 ```
 
 - Before we create our artifact, we need to do changes to our `application.properties` file under `/src/main/resources` directory for below lines.
+![](images/change.png)
 ```sh
 jdbc.url=jdbc:mysql://db01.vprofile.in:3306/accounts?useUnicode=true&
 
@@ -158,16 +161,18 @@ rabbitmq.address=rmq01.vprofile.in
 ```sh
 mvn install
 ```
-![](images/mvn-build-success.png)
-![](images/artifact-created.png)
+![](images/mvn-build-successArtifact-created.png)
 
 ### Step-6: Create S3 bucket using AWS CLI, copy artifact
 
 - We will upload our artifact to s3 bucket from AWS CLI and our Tomcat server will get the same artifact from s3 bucket.
 
 - We will create an IAM user for authentication to be used from AWS CLI.
+
+![](images/aws_cli_installation.png)
+
 ```sh
-name: vprofile-s3-admin
+name: proje3-s3-admin
 Access key - Programmatic access
 Policy: s3FullAccess
 ```
@@ -183,14 +188,15 @@ format: json
 ```
 - Create bucket. Note: S3 buckets are global so the naming must be UNIQUE!
 ```sh
-aws s3 mb s3://vprofile-artifact-storage-rd 
+aws s3 mb s3://proje3-artifact-storage-rd
 ```
 - Go to target directory and copy the artifact to bucket with below command. Then verify by listing objects in the bucket.
 ```sh
-aws s3 cp vprofile-v2.war s3://vprofile-artifact-storage-rd
-aws s3 ls vprofile-artifact-storage-rd
+aws s3 cp vprofile-v2.war s3://proje3-artifact-storage-rd
+aws s3 ls proje3-artifact-storage-rd
 ```
 - We can verify the same from AWS Console.
+
 ![](images/s3-created.png)
 
 ### Step-7: Download Artifact to Tomcat server from S3
@@ -198,14 +204,14 @@ aws s3 ls vprofile-artifact-storage-rd
 - In order to download our artifact onto Tomcat server, we need to create IAM role for Tomcat. Once role is created we will attach it to our `app01` server.
 ```sh
 Type: EC2
-Name: vprofile-artifact-storage-role
+Name: proje3-artifact-storage-role
 Policy: s3FullAccess
 ```
-- Before we login to our server, we need to add SSH access on port 22 to our `vprofile-app-SG`.
+- Before we login to our server, we need to add SSH access on port 22 to our `proje3_app_sg`.
 
 - Then connect to `app011` Ubuntu server.
 ```sh
-ssh -i "vprofile-prod-key.pem" ubuntu@<public_ip_of_server>
+ssh -i "proje3_key.pem" ubuntu@<public_ip_of_server>
 sudo su -
 systemctl status tomcat8
 ```
@@ -219,8 +225,8 @@ rm -rf ROOT
 - Next we will download our artifact from s3 using aws cli commands. First we need to install `aws cli`. We will initially download our artifact to `/tmp` directory, then we will copy it under `/var/lib/tomcat8/webapps/` directory as `ROOT.war`. Since this is the default app directory, Tomcat will extract the compressed file.
 ```sh
 apt install awscli -y
-aws s3 ls s3://vprofile-artifact-storage-rd
-aws s3 cp s3://vprofile-artifact-storage-rd/vprofile-v2.war /tmp/vprofile-v2.war
+aws s3 ls s3://proje3-artifact-storage-rd
+aws s3 cp s3://proje3-artifact-storage-rd/vprofile-v2.war /tmp/vprofile-v2.war
 cd /tmp
 cp vprofile-v2.war /var/lib/tomcat8/webapps/ROOT.war
 systemctl start tomcat8
@@ -234,7 +240,7 @@ cat /var/lib/tomcat8/webapps/ROOT/WEB-INF/classes/application.properties
 - We can validate network connectivity from server using `telnet`.
 ```sh
 apt install telnet
-telnet db01.vprofile.in 3306
+telnet db01.proje3.abdulhamidgokce.com 3306
 ```
 
 ### Step-8: Setup LoadBalancer
@@ -242,7 +248,7 @@ telnet db01.vprofile.in 3306
 - Before creating LoadBalancer , first we need to create Target Group.
 ```sh
 Intances
-Target Grp Name: vprofile-elb-TG
+Target Grp Name: proje3-elb-TG
 protocol-port: HTTP:8080
 healtcheck path : /login
 Advanced health check settings
@@ -253,10 +259,10 @@ available instance: app01 (Include as pending below)
 
 - Now we will create our Load Balancer.
 ```sh
-vprofile-prod-elb
+proje3-prod-elb
 Internet Facing
 Select all AZs
-SecGrp: vprofile-elb-secGrp
+SecGrp: proje3_ELB_SG
 Listeners: HTTP, HTTPS
 Select the certificate for HTTPS
 ```
@@ -279,17 +285,17 @@ Select the certificate for HTTPS
 
 - Next we will create a Launch template using the AMI created in above step for our ASG.
 ```sh
-Name: vprofile-app-LT
-AMI: vprofile-app-image
+Name: proje3-app-LC
+AMI: proje3-app-image
 InstanceType: t2.micro
-IAM Profile: vprofile-artifact-storage-role
-SecGrp: vprofile-app-SG
-KeyPair: vprofile-prod-key
+IAM Profile: proje3-artifact-storage-role
+SecGrp: proje3_app-sg
+KeyPair: proje3_key
 ```
 
 - Our Launch template is ready, now we can create our ASG.
 ```sh
-Name: vprofile-app-ASG
+Name: proje3-app-ASG
 ELB healthcheck
 Add ELB
 Min:1
