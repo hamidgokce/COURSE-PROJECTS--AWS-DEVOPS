@@ -21,6 +21,12 @@
 - Vagrant is going to communicate with Oracle VM Virtual Box.
 - We will be using some batch scripts commands to set up our services.
 
+In this project, I was able to:
+- ✅ Use Vagrant to create/login/destroy virtual machines on VirtualBox.
+- ✅ Set up 3-Tier Web Application Stack using Nginx, Tomcat, MySQL, Memcached, and RabbitMQ.
+- ✅ Use Bash Scripting to configure Linux servers.
+- ✅ Use Maven as a build tool to create artifacts for the Java application.
+
 ## PreRequisites Installed:
   * Oracle VM VirtualBox Manager
   * Vagrant

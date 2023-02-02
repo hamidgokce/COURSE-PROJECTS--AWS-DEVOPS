@@ -2,6 +2,9 @@
 
 [*Project Source*](https://www.udemy.com/course/devopsprojects/?src=sac&kw=devops+projects)
 ![](images/vprofile-project.png)
+
+- Automated this process using Bash scripts with Vagrant shell provisioner. With a simple "vagrant up" command, our application stack was created with bootstrap data and ready to use.
+
 ## Prerequisites
 
  * Oracle VM VirtualBox Manager

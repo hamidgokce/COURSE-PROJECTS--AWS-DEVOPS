@@ -5,6 +5,16 @@
 - What is lift and shift cloud strategy?
     -   What is lift-and-shift migration? In the lift-and-shift approach to cloud migration, applications, systems, workloads, and data are moved from on-premises to the cloud with little or no changes. Resources hosted in the data center are copied and "lifted" from the on-premises infrastructure.
 
+📌 In Project-3, with the Lift&Shift strategy, I have moved the application to AWS. Here is the flow of execution:
+- Created Security Groups for ELB, Application, and Backend servers.
+- Launched instances with user-data scripts.
+- Created a Private Hosted Zone in Route53 and records to map IP addresses of backend services to DNS names.
+- Built application artifacts with Maven
+- Created S3 bucket and copied artifacts to S3 with AWS CLI commands.
+- Setup ELB with HTTPS using SSL certificate from ACM.
+- Created Route53 record for the application by aliasing ELB endpoint.
+- Created an AMI from the application server, a Launch Template, and ASG for Tomcat application instances.
+
 
 ## Prerequisites:
  * AWS Account
@@ -56,7 +66,7 @@ UserData: mysql.sh
 ssh -i proje3_key.pem centos@<public_ip_of_instance>
 sudo su -
 curl http://169.254.169.254/latest/user-data
-# The 169.254. 169.254 IP address is a “magic” IP in the cloud world, in AWS it used to retrieve user data and instance metadata specific to a instance. It can only be accessed locally from instances and available without encryption and authentication.
+# The 169.254.169.254 IP address is a “magic” IP in the cloud world, in AWS it used to retrieve user data and instance metadata specific to a instance. It can only be accessed locally from instances and available without encryption and authentication.
 systemctl status mariadb
 # If mariadb does not appear to be running, we can see the ongoing processes with the ps -ef command.
 ```
