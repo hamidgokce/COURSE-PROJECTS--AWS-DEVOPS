@@ -191,7 +191,10 @@ show tables;
 ```sh
 RDS:
 vprofile-rds-mysql.cyicet2iv8su.us-east-1.rds.amazonaws.com:3306
+
+Rabbitmq
 amqps://b-9fb5569a-ccd8-4c5a-b3b2-7be27757c2aa.mq.us-east-1.amazonaws.com:5671
+
 ElastiCache:
 vprofile-elasticache-svc.iz2nzo.cfg.use1.cache.amazonaws.com:11211
 ```
@@ -200,7 +203,7 @@ vprofile-elasticache-svc.iz2nzo.cfg.use1.cache.amazonaws.com:11211
 
 - Application in Elastic Beanstalk means like a big container which can have multiple environments. Since out app is Running on Tomcat we will choose `Tomcat` as platform.
 ```sh
-Name: vprofile-javaapp-prod-rd
+Name: vprofile-java-app
 Platform: Tomcat
 keep the rest default
 Configure more options:
@@ -219,6 +222,9 @@ Percentage :50 %
 EC2 key pair: vprofile-bean-key
 ```
 ![architecture](images/beanstalk.png)
+![architecture](images/beanstalk2.png)
+![architecture](images/ec2_instances_comefrom_elasticbeanstalk.png)
+
 
 ### Step-5: Update Backend SecGrp & ELB
 
@@ -228,7 +234,7 @@ Custom TCP 3306 from Beanstalk SecGrp(you can find id from EC2 insatnces)
 Custom TCP 11211 from Beanstalk SecGrp
 Custom TCP 5671 from Beanstalk SecGrp
 ```
-![](images/backend-SecGrp.png)
+![architecture](images/step5.png)
 
 - In Elastic Beanstalk console, under our app environment, we need to clink Configuration and do below changes and apply:
 ```sh
@@ -249,6 +255,7 @@ rabbitmq.address
 rabbitmq.username
 rabbitmq.password
 ```
+![architecture](images/app_properties.png)
 
 - Go to root directory of project to the same level with `pom.xml` file. Run below command to build the artifact.
 ```sh
@@ -261,12 +268,15 @@ mvn install
 
 - Now we will select our uploaded application and click Deploy.
 
-![](images/app-deployed.png)
+![architecture](images/maven.png)
 
 - Let's check if our application deployed successfully.
 
-![](images/app-running-in-bs.png)
-![](images/app-running-from-beanstalk.png)
+![architecture](images/beanstalk_uploaded.png)
+![architecture](images/beanstalkendpoint.png)
+![architecture](images/result.png)
+
+
 
 ### Step-7: Create DNS Record in Route53 for Application
 
@@ -274,7 +284,6 @@ mvn install
 
 - Now we can reach our application securely with DNS name we have given.
 
-![](images/create-record-for-ebstalk.png)
 
 ### Step-8: Create Cloudfront Distribution for CDN
 
@@ -288,7 +297,6 @@ Security policy: TLSv1
 ``` 
 - Now we can check our application from browser.
 
-![](images/app-distributed-from-cdn.png)
 
 ### Step-9: Clean-up
 
