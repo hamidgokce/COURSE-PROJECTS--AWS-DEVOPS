@@ -123,3 +123,5 @@ This project aims to create full CI/CD Pipeline for microservice based applicati
 - ### [Project-3_Lift and Shift Application Workload to AWS](./Real_Time_DevOps_Project/Project-3_Lift%20and%20Shift%20Application%20Workload%20to%20AWS/README.md)
 <img src=".\Real_Time_DevOps_Project\Project-3_Lift%20and%20Shift%20Application%20Workload%20to%20AWS\images\Project-3.png" width="65%">
 
+- ### [Project-4_ Re-Architecting Web App on AWS Cloud[Cloud Native]](./Real_Time_DevOps_Project/Project-4_%20Re-Architecting%20Web%20App%20on%20AWS%20Cloud%5BCloud%20Native%5D/README.md)
+<img src=".\Real_Time_DevOps_Project\Project-4_ Re-Architecting Web App on AWS Cloud[Cloud Native]\images\Project-4.png" width="65%">

@@ -166,7 +166,7 @@ mysql -V
 - Before we login to database, we need to update `vprofile-backend-SG` Inbound rule to allow connection on port 3306 for `mysql-client-SG`
 After updating rule, try to connect with below command:
 ```sh
-mysql -h vprofile-rds-mysql.cyicet2iv8su.us-east-1.rds.amazonaws.com -u admin -p GdkEoOolnmSh911no5VS
+mysql -h vprofile-rds-mysql.cyicet2iv8su.us-east-1.rds.amazonaws.com -u admin -pGdkEoOolnmSh911no5VS
 mysql> show databases;
 ```
 ![Architecture](images/secgroup_fixing.png)
@@ -174,12 +174,14 @@ mysql> show databases;
 - Next we will clone our source code here to use script to initialize our database. After these commands we should be able to see 2 tables `role`, `user`, and `user_role`.
 
 ```sh
-git clone https://github.com/rumeysakdogan/vprofileproject-all.git
-cd vprofileproject-all
+git clone https://github.com/devopshydclub/vprofile-project.git 
+  (git clone https://github.com/hamidgokce/COURSE-PROJECTS--AWS-DEVOPS.git)
+  (cd COURSE-PROJECTS--AWS-DEVOPS/Real_Time_DevOps_Project/Project-4_\ Re-Architecting\ Web\ App\ on\ AWS\ Cloud\[Cloud\ Native\]/src/main/resources/)
+cd vprofileproject
 git checkout aws-Refactor
 cd src/main/resources
-mysql -h vprofile-rds-mysql.chrgxmhxkprk.us-east-1.rds.amazonaws.com -u admin -padvPtIYOfqGe4T41MUXk accounts < db_backup.sql
-mysql -h vprofile-rds-mysql.chrgxmhxkprk.us-east-1.rds.amazonaws.com -u admin -padvPtIYOfqGe4T41MUXk accounts
+mysql -h vprofile-rds-mysql.cyicet2iv8su.us-east-1.rds.amazonaws.com -u admin -pGdkEoOolnmSh911no5VS accounts < db_backup.sql
+mysql -h vprofile-rds-mysql.cyicet2iv8su.us-east-1.rds.amazonaws.com -u admin -pGdkEoOolnmSh911no5VS accounts
 show tables;
 ```
 
@@ -188,17 +190,17 @@ show tables;
 - Our backend services are ready now. We will copy their endpoints from AWS console. These information will be used in our `application.properties` file
 ```sh
 RDS:
-vprofile-rds-mysql.chrgxmhxkprk.us-east-1.rds.amazonaws.com:3306
-ActiveMQ: amqps://b-b7d7bbcb-3894-4af7-8048-726a9ceabc43.mq.us-east-1.amazonaws.com:5671
+vprofile-rds-mysql.cyicet2iv8su.us-east-1.rds.amazonaws.com:3306
+amqps://b-9fb5569a-ccd8-4c5a-b3b2-7be27757c2aa.mq.us-east-1.amazonaws.com:5671
 ElastiCache:
-vprofile-elasticache-svc.eqmmsw.cfg.use1.cache.amazonaws.com:11211
+vprofile-elasticache-svc.iz2nzo.cfg.use1.cache.amazonaws.com:11211
 ```
 
 #### Create Application
 
 - Application in Elastic Beanstalk means like a big container which can have multiple environments. Since out app is Running on Tomcat we will choose `Tomcat` as platform.
 ```sh
-Name: vprofilejavaapp-prod-rd
+Name: vprofile-javaapp-prod-rd
 Platform: Tomcat
 keep the rest default
 Configure more options:
@@ -216,6 +218,7 @@ Percentage :50 %
 ****Security****
 EC2 key pair: vprofile-bean-key
 ```
+![architecture](images/beanstalk.png)
 
 ### Step-5: Update Backend SecGrp & ELB
 
