@@ -22,7 +22,7 @@
 
 - We will create a key pair to be used with Elastic Beanstalk. Go to `EC2` console, on left menu select `KeyPair` -> `Create key pair`.
 ```sh
-Name: vprofile-bean-key
+Name: 
 ```
 - Remember where to download the private key, it will be used when logging in to EC2 via SSH.
 
@@ -39,7 +39,7 @@ All Traffic from `vprofile-backend-SG`
 
 #### Create Subnet Group:
 
-- First we will create `Subnet Groups` with below properties:
+- First we will create `Subnet Groups` with below properties:(If we have seperate vpc subnet group is useful)
 ```sh
 Name: vprofile-rds-sub-grp
 AZ: Select All
@@ -110,7 +110,7 @@ Name: vprofile-elasticache-svc
 Engine version: 1.4.5
 Parameter Grp: vprofile-memcached-para-grp
 NodeType: cache.t2.micro
-# of Nodes: 1
+Number of Nodes: 1
 SecGrp: vprofile-backend-SG
 ```
 
@@ -148,6 +148,7 @@ t2.micro
 SecGrp: Allow SSH on port 22
 Keypair: vprofile-prod-key
 Userdata:
+
 #! /bin/bash
 apt update -y
 apt upgrade -y
@@ -177,11 +178,11 @@ mysql> show databases;
 git clone https://github.com/devopshydclub/vprofile-project.git 
   (git clone https://github.com/hamidgokce/COURSE-PROJECTS--AWS-DEVOPS.git)
   (cd COURSE-PROJECTS--AWS-DEVOPS/Real_Time_DevOps_Project/Project-4_\ Re-Architecting\ Web\ App\ on\ AWS\ Cloud\[Cloud\ Native\]/src/main/resources/)
-cd vprofileproject
+cd vprofile-project
 git checkout aws-Refactor
 cd src/main/resources
 mysql -h vprofile-rds-mysql.cyicet2iv8su.us-east-1.rds.amazonaws.com -u admin -pGdkEoOolnmSh911no5VS accounts < db_backup.sql
-mysql -h vprofile-rds-mysql.cyicet2iv8su.us-east-1.rds.amazonaws.com -u admin -pGdkEoOolnmSh911no5VS accounts
+mysql -h vprofile-rds-mysql.cyicet2iv8su.us-east-1.rds.amazonaws.com -u admin -p8C0oRoIMSUwrJvjbVpVR accounts
 show tables;
 ```
 
