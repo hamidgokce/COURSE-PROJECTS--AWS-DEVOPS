@@ -17,6 +17,11 @@
 
 ![](images/PROJECT-5.2.png)
 
+![](images/workflow.png)
+
+![](images/steps.png)
+
+
 
 ### Step-1: Create Keypair
 
@@ -28,7 +33,7 @@
 ```sh
 Name: jenkins-SG
 Allow: SSH from MyIP
-Allow: 8080 from Anywhere IPv4 and IPv6 We will create a Github webhook which will trigger Jenkins)
+Allow: 8080 from Anywhere IPv4 and IPv6 (We will create a Github webhook which will trigger Jenkins)
 ```
 ![](images/Jenkins-SecGrp.png)
 
@@ -37,7 +42,7 @@ Allow: 8080 from Anywhere IPv4 and IPv6 We will create a Github webhook which wi
 ```sh
 Name: nexus-SG
 Allow: SSH from MyIP
-Allow: 8081 from MyIP and Jenkins-SG
+Allow: 8081 from MyIP and Jenkins-SG (Jenkins server can upload artifact to the Nexus server)
 ```
 ![](images/nexus-SG.png)
 
@@ -45,7 +50,7 @@ Allow: 8081 from MyIP and Jenkins-SG
 ```sh
 Name: sonar-SG
 Allow: SSH from MyIP
-Allow: 80 from MyIP and Jenkins-SG
+Allow: 80 from MyIP and Jenkins-SG (Jenkins will be uploading the test result to the Sonerqube server)
 ```
 ![](images/sonar-SG.png)
 
@@ -317,7 +322,7 @@ systemctl status nexus
 cat /opt/nexus/sonatype-work/nexus3/admin.password
 ```
 
-- Username is `admin`, paste password from previous step. Then we need to setup our new password and select `Disable Anonymous Access`.
+- Username is `admin`, paste password from previous step. Then we need to setup our new password and select `Disable Anonymous Access`. We do not want anybody to download or upload artifact to our server
 
 - We select gear symbol and create repository. This repo will be used to store our release artifacts.
 
@@ -327,7 +332,7 @@ Name: vprofile-release
 Version policy: Release
 ```
 
-- Next we will create a maven2 proxy repository. Maven will store the dependecies in this repository, whenever we need any dependency for our project it will check this proxy repo in Nexus first and download it for project. Proxy repo will download the dependecies from maven2 central repo at first.
+- Next we will create a maven2 proxy repository. Maven tool in Jenkins will store the dependecies in this repository, whenever we need any dependency for our project it will check this proxy repo in Nexus first and download it for project. Proxy repo will download the dependecies from maven2 central repo at first.
 
 ```sh
 maven2 proxy
@@ -408,7 +413,7 @@ Name: MAVEN3
 version : keep same
 ``` 
 
-- Next we need to add Nexus login credentials to Jenkins. Go to `Manage Jenkins` -> `Manage Credentials` ->  `Global` -> `Add Credentials`
+- Next we need to add Nexus login credentials to Jenkins. Jenkins can use it to upload the artifact. Go to `Manage Jenkins` -> `Manage Credentials` ->  `Global` -> `Add Credentials`
 
 ```sh
 username: admin
@@ -432,7 +437,7 @@ pipeline {
         NEXUS_PASS = 'admin'
         RELEASE_REPO = 'vprofile-release'
         CENTRAL_REPO = 'vpro-maven-central'
-        NEXUSIP = '172.31.19.69'
+        NEXUSIP = '172.31.24.80'
         NEXUSPORT = '8081'
         NEXUS_GRP_REPO = 'vpro-maven-group'
         NEXUS_LOGIN = 'nexuslogin'
@@ -472,7 +477,7 @@ sudo su - jenkins
 git ls-remote -h -- git@github.com:hamidgokce/vprociproject.git HEAD
 ```
 
-- Now its Build time. Our build pipeline is successful!
+- Now its Build time. Our build pipeline is successful! Firstly we need to change '-' ==> '_' (pom.xml and settings.xml files)
 
 ![](images/build-job-successful.png)
 
@@ -530,7 +535,7 @@ Two things need to setup:
 
 - Lets start with SonarScanner tool configuration. Go to `Manage Jenkins` -> `Global Tool Configuration`
 ```sh
-Add sonar scanner
+Add sonarscanner
 name: sonarscanner
 tick install automatically
 ```
@@ -694,6 +699,6 @@ post{
         }
     }
 ```
--  Voila! We get our Notification from slack.
+- We get our Notification from slack.
 
 ![](images/slack-notifications.png)
