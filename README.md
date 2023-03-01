@@ -125,3 +125,10 @@ This project aims to create full CI/CD Pipeline for microservice based applicati
 
 - ### [Project-4_ Re-Architecting Web App on AWS Cloud[Cloud Native]](./Real_Time_DevOps_Project/Project-4_%20Re-Architecting%20Web%20App%20on%20AWS%20Cloud%5BCloud%20Native%5D/README.md)
 <img src=".\Real_Time_DevOps_Project\Project-4_ Re-Architecting Web App on AWS Cloud[Cloud Native]\images\Project-4.png" width="65%">
+
+- ### [Project-5_ CI Project with Jenkins, Nexus,SonarQube and Slack](./Real_Time_DevOps_Project/Project-5_%20CI%20Project%20with%20Jenkins%2C%20Nexus%2CSonarQube%20and%20Slack/README.md)
+<img src=".\Real_Time_DevOps_Project\Project-5_ CI Project with Jenkins, Nexus,SonarQube and Slack\images\PROJECT-5.png" width="65%">
+
+- ### [Project-6_ Continuous Integration on AWS](./Real_Time_DevOps_Project/Project-6_%20Continuous%20Integration%20on%20AWS/README.md)
+<img src="./Real_Time_DevOps_Project\Project-6_ Continuous Integration on AWS\images\Project-6.png" width="65%">
+
