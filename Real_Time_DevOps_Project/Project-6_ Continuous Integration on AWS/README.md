@@ -126,6 +126,7 @@ git commit -m "message"
 git push origin ci-aws
 ```
 ### Step-3: Setup SonarCloud 
+SonarCloud is cloud bases code analysis service like sonerqube.
 
 We need to have an account, from account avatar -> `My Account` -> `Security`. Generate token name as `vprofile-sonartoken`. Note the token.
 
@@ -143,7 +144,7 @@ Our Sonar Cloud is ready!
 
 ### Step-4: Store Sonar variables in System Manager Parameter Store 
 
-We will create paramters for below variables.
+We will create parameters for below variables.
 ```sh
 CODEARTIFACT_TOKEN	 SecureString	
 HOST      https://sonarcloud.io
@@ -168,6 +169,7 @@ Insert build commands from foler aws-files/sonar_buildspec.yml
 Logs-> GroupName: vprofile-buildlogs
 StreamName: sonarbuildjob
 ```
+![](images/build.png)
 
 We need to update sonar_buildspec.yml file parameter store sections with the exact names we have given in SSM Parameter store.
 
@@ -208,6 +210,9 @@ Its time to build project.
 
 First we will create an SNS topic from SNS service and subscribe to topic with email.
 
+![](images/sns-topic.png)
+
+
 ![](images/sns-topic-created.png)
 
 We need confirm our subscription from our email.
@@ -225,7 +230,7 @@ SourceProvider: Codecommit
 branch: ci-aws
 Change detection options: CloudWatch events
 Build Provider: CodeBuild
-ProjectName: vprofile-Build-Aetifact
+ProjectName: vprofile-Build-Artifact
 BuildType: single build
 Deploy provider: Amazon S3
 Bucket name: vprofile98-build-artifact
@@ -242,4 +247,4 @@ Time to run our CodePipeline.
 
 ### Step-8: Validate CodePipeline
 
-We can make some changes in README file of source code, onc we push the changes CloudWatch will detect the changes and Notification event will trigger Pipeline.
+We can make some changes in README file of source code, once we push the changes CloudWatch will detect the changes and Notification event will trigger Pipeline.
