@@ -12,7 +12,7 @@ Create an IAM role for EC2  with policy `AmazonS3FullAccess` name as `vprofile-c
 Login to Jenkins server.
 ```sh
 sudo -i
-systemctl stop jenkins
+systemctl stop jenkins 
 cd /var/lib
 du -sh jenkins
 cd jenkins
