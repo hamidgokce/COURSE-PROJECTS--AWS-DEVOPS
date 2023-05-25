@@ -1,16 +1,16 @@
-variable "git-name" {
-  default = "james-clarusway"
-}
+# variable "git-name" {
+#   default = "james-clarusway"
+# }
 
 variable "git-token" {
-  default = "xxxxxxxxxxxxxxx"
+  default = "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"
 }
 
 variable "key-name" {
-  default = "clarus"
+  default = "EC2_key"
 }
 
-variable "hosted-zone" {
-  default = "clarusway.us."
-}
+# variable "hosted-zone" {
+#   default = "clarusway.us."
+# }
 
