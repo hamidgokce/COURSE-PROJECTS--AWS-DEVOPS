@@ -9,7 +9,7 @@ from flaskext.mysql import MySQL
 app = Flask(__name__)
 
 # The hardest part of this project is to get endpoint of RDS instances. Since our RDS is created within cloudformation/terraform template, we need to get RDS endpoint and paste it here as environmental variable using Launch templates user data. 
-db_endpoint = open("/home/ec2-user/phonebook/dbserver.endpoint", 'r', encoding='UTF-8') 
+db_endpoint = open("/home/ec2-user/COURSE-PROJECTS--AWS-DEVOPS/blob/main/DevOps/202-Terraform-Phonebook-Application-deployed-on-AWS/new_version/dbserver.endpoint", 'r', encoding='UTF-8') 
 
 # Configure mysql database
 
@@ -23,7 +23,7 @@ app.config['MYSQL_DATABASE_PORT'] = 3306
 db_endpoint.close()
 mysql = MySQL() # We are using this function to initialize mysql 
 mysql.init_app(app) 
-connection = mysql.connect()
+connection = mysql.connect() 
 connection.autocommit(True)
 cursor = connection.cursor()
 
