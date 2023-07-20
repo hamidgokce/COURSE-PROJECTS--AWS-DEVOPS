@@ -14,9 +14,10 @@ apt-cache policy docker-ce
 
 sudo apt install docker-ce
 
-sudo systemctl enable docker && sudo systemctl start docker
+sudo groupadd docker
+sudo usermod -aG docker ${USER}  
 
-sudo usermod -aG docker ${USER}
+sudo systemctl enable docker && sudo systemctl start docker
 
 mkdir -p ~/.docker/cli-plugins/
 curl -SL https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
